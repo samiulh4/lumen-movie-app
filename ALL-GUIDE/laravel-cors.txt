@@ -1,0 +1,8 @@
+https://github.com/fruitcake/laravel-cors
+composer require barryvdh/laravel-cors "^2.0.1"
+composer require fruitcake/laravel-cors "^2.0.1"
+
+https://galib-rabib.medium.com/how-to-fix-cors-error-in-lumen-api-services-ba5a62d23507
+https://afrimadonidinata.medium.com/fix-error-cors-for-laravel-lumen-application-8ac24d85ea71#:~:text=Why%20it%20happen%3F,localhost)%20but%20different%20port%20number.
+
+

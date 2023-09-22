@@ -1,0 +1,99 @@
+01.
+composer require tymon/jwt-auth "^1.0.2"
+
+02. bootstrap folder
+$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+
+03.
+Create a config directory in the root of your Lumen project if it doesn't already exist.
+Inside the config directory, create a new file named jwt.php. This file will contain your JWT configuration.
+<?php
+
+return [
+    'secret' => env('JWT_SECRET'),
+    'ttl' => env('JWT_TTL', 60),
+    'refresh_ttl' => env('JWT_REFRESH_TTL', 20160),
+    'algo' => env('JWT_ALGO', 'HS256'),
+];
+
+04.
+Create the file config/auth.php and add the following:
+<?php
+return [
+   'defaults' => [
+       'guard' => 'api',
+       'passwords' => 'users',
+   ],
+'guards' => [
+       'api' => [
+           'driver' => 'jwt',
+           'provider' => 'users',
+       ],
+   ],
+'providers' => [
+       'users' => [
+           'driver' => 'eloquent',
+           'model' => \App\User::class
+       ]
+   ]
+];
+
+05. Update User Model
+<?php
+
+namespace App\Models;
+
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Database\Eloquent\Model;
+use Laravel\Lumen\Auth\Authorizable;
+
+use Tymon\JWTAuth\Contracts\JWTSubject;
+
+class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
+{
+    use Authenticatable, Authorizable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'email',
+    ];
+
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password',
+    ];
+
+    /**
+     * Retrieve the identifier for the JWT key.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+}
+06.
+
+06. create middle ware php JwtMiddleware
+php artisan jwt:secret

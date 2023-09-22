@@ -1,0 +1,77 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\ValidationData;
+use Lcobucci\JWT\Signer\Key\InMemory;
+
+class ApiUserController extends Controller
+{
+
+    public function __construct()
+    {
+
+    }
+
+    public function index1()
+    {
+
+        $signer = new Sha256();
+
+// Retrieve your secret key from the environment variable
+        $secretKey = getenv('JWT_SECRET'); // Replace 'JWT_SECRET' with your actual environment variable name
+
+        $builder = new Builder();
+        $token = $builder
+//            ->issuedBy('your_issuer') // Set the issuer
+//            ->permittedFor('your_audience') // Set the audience
+//            ->identifiedBy('your_token_id', true) // Set the token ID
+//            ->issuedAt(time()) // Set the issued at time
+//            ->expiresAt(time() + 3600) // Set the expiration time (1 hour)
+//            ->withClaim('user_id', 123) // Set custom claim(s) like user ID
+            ->getToken($signer, new Key($secretKey)); // Get the token instance
+
+        $jwtToken = $token->toString(); // Get the token as a string
+        echo $jwtToken;
+    }
+    public function index()
+    {
+
+
+        $jwtToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.W10.vGltQ-FTHLlAMrO-yxb23XKv5gzpu2mjgcalZSeHLvY";
+
+        $token = (new Parser())->parse($jwtToken); // Parse the JWT token
+
+        $signer = new Sha256();
+        $data = new ValidationData();
+//$data->setIssuer('your_issuer'); // Set the expected issuer
+//$data->setAudience('your_audience'); // Set the expected audience
+
+// Retrieve your secret key from the environment variable
+        $secretKey = getenv('JWT_SECRET'); // Replace 'JWT_SECRET' with your actual environment variable name
+
+        $key = InMemory::plainText($secretKey);
+
+        if ($token->validate($data) && $token->verify($signer, $key)) {
+            // Token is valid and signature is verified
+
+            //$userId = $token->getClaim('user_id'); // Get the user ID claim
+
+            // Perform authentication using the extracted claims
+            // For example, find the user with the provided user ID and authenticate the user
+
+            // ...
+            echo 'Token is valid and signature is verified';
+        } else {
+            // Token is invalid or signature verification failed
+            // Handle authentication failure
+            echo 'Token is invalid or signature verification failed';
+        }
+
+
+    }
+}

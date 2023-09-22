@@ -1,0 +1,10 @@
+01.
+https://www.cloudways.com/blog/lumen-rest-api-authentication/
+https://github.com/ahmedkhan847/todoappwithlumen
+
+02.
+https://benlobaugh.medium.com/jwt-user-authentication-with-lumen-api-ee3b8e69c678
+https://github.com/blobaugh/lumen-api-jwt-auth-example/tree/main/src
+
+03.
+https://github.com/anil-sidhu/lumen-jwt/tree/master/app

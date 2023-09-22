@@ -1,0 +1,91 @@
+1)
+composer require lcobucci/jwt "^3.4.6"
+
+2)
+create a new folder called jwt in project's root directory
+Inside the jwt folder, create two empty files: private.pem and public.pem.
+These files will be used to generate and validate JWT tokens.
+
+3)
+Open the bootstrap/app.php file in your Lumen project.
+Uncomment the line that loads the Dotenv variables:
+
+Add the following code at the bottom of the bootstrap/app.php file to configure the JWT settings:
+php
+Copy code
+$app->configure('jwt');
+$app->register(App\Providers\AuthServiceProvider::class);
+
+Create the JWT configuration file:
+
+In your project's root directory, create a new folder called config.
+Inside the config folder, create a new file called jwt.php.
+Open the jwt.php file and add the following configuration:
+
+<?php
+
+return [
+    'secret' => env('JWT_SECRET'),
+    'keys' => [
+        'private' => storage_path('jwt/private.pem'),
+        'public' => storage_path('jwt/public.pem'),
+    ],
+];
+
+
+To install JWT (JSON Web Tokens) in a Lumen project, you can follow these steps:
+
+Install the required dependencies:
+
+Open your terminal or command prompt.
+Navigate to your Lumen project's root directory.
+Run the following command to install the lcobucci/jwt package:
+bash
+Copy code
+composer require lcobucci/jwt
+Create a new folder for JWT keys (optional):
+
+In your project's root directory, create a new folder called jwt.
+Inside the jwt folder, create two empty files: private.pem and public.pem. These files will be used to generate and validate JWT tokens.
+Configure the JWT settings:
+
+Open the bootstrap/app.php file in your Lumen project.
+Uncomment the line that loads the Dotenv variables:
+php
+Copy code
+Dotenv::load(__DIR__.'/../');
+Add the following code at the bottom of the bootstrap/app.php file to configure the JWT settings:
+php
+Copy code
+$app->configure('jwt');
+$app->register(App\Providers\AuthServiceProvider::class);
+Create the JWT configuration file:
+
+In your project's root directory, create a new folder called config.
+Inside the config folder, create a new file called jwt.php.
+Open the jwt.php file and add the following configuration:
+php
+Copy code
+<?php
+
+return [
+    'secret' => env('JWT_SECRET'),
+    'keys' => [
+        'private' => storage_path('jwt/private.pem'),
+        'public' => storage_path('jwt/public.pem'),
+    ],
+];
+Update the .env file:
+
+Open the .env file in your project's root directory.
+Add the following line to set the JWT secret:
+makefile
+Copy code
+JWT_SECRET=your_secret_key
+
+On Windows (using Git Bash):
+bash
+Copy code
+openssl rand -base64 32 | tr -d '\r\n'
+
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.W10.vGltQ-FTHLlAMrO-yxb23XKv5gzpu2mjgcalZSeHLvY
