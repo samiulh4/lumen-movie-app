@@ -23,6 +23,7 @@ $router->post('api/sign-in', 'AuthenticationController@sign_in');
 $router->get('api/token-refresh', 'AuthenticationController@token_refresh');
 $router->get('api/movie/get-web-movies', 'MovieController@getWebMovies');
 $router->get('api/movie/get-movie-view-data-by-Id/{id}', 'MovieController@getMovieViewDataById');
+$router->get('api/movie/search-data/{searchData}', 'DataController@getSearchData');
 $router->get('api/data/get-countries', 'DataController@getCountries');
 $router->get('api/data/get-languages', 'DataController@getLanguages');
 

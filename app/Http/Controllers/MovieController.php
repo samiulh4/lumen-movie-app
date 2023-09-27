@@ -17,7 +17,6 @@ class MovieController extends Controller
 
     public function __construct()
     {
-
     }
 
     public function store(Request $request)
@@ -61,14 +60,18 @@ class MovieController extends Controller
                     'responseStatus' => 1,
                     'responseCode' => 201,
                     'message' => $request->title . ' stored successfully.',
-                ], 201);
+                ],
+                201
+            );
         } catch (Exception $e) {
             return response()->json(
                 [
                     'responseStatus' => 0,
                     'responseCode' => 500,
                     'message' => $e->getMessage(),
-                ], 500);
+                ],
+                500
+            );
         }
     }
 
@@ -80,11 +83,13 @@ class MovieController extends Controller
                     'responseStatus' => 0,
                     'responseCode' => 404,
                     'message' => 'The server cannot find the requested resource.',
-                ], 404);
+                ],
+                404
+            );
         }
 
-       $decode_id = $id;
-       $this->validate($request, [
+        $decode_id = $id;
+        $this->validate($request, [
             'title' => 'required|string',
             'released_year' => 'required',
             'language_id' => 'required',
@@ -135,15 +140,19 @@ class MovieController extends Controller
                     'responseStatus' => 1,
                     'message' => $request->title . ' updated successfully.',
                     'movie' => $movie,
-                ], 200);
+                ],
+                200
+            );
         } catch (Exception $e) {
             return response()->json(
                 [
                     'responseStatus' => 0,
                     'message' => $e->getMessage(),
-                ], 500);
+                ],
+                500
+            );
         }
-    }// end -:- update()
+    } // end -:- update()
 
     public function getWebMovies(Request $request)
     {
@@ -163,16 +172,20 @@ class MovieController extends Controller
                     'responseCode' => 200,
                     'message' => 'Get all movies successfully.',
                     'movies' => $movies
-                ], 200);
+                ],
+                200
+            );
         } catch (Exception $e) {
             return response()->json(
                 [
                     'responseStatus' => 0,
                     'responseCode' => 500,
                     'message' => $e->getMessage(),
-                ], 500);
+                ],
+                500
+            );
         }
-    }// end -:- getWebMovies()
+    } // end -:- getWebMovies()
 
     public function getMovieViewDataById($id)
     {
@@ -181,7 +194,9 @@ class MovieController extends Controller
                 [
                     'responseStatus' => 0,
                     'message' => 'The server cannot find the requested resource.',
-                ], 404);
+                ],
+                404
+            );
         }
         try {
             $movie = Movie::leftJoin('users', 'movies.created_by', '=', 'users.id')
@@ -201,13 +216,52 @@ class MovieController extends Controller
                     'responseStatus' => 1,
                     'message' => $movie->title . ' get successfully.',
                     'movie' => $movie
-                ], 200);
+                ],
+                200
+            );
         } catch (Exception $e) {
             return response()->json(
                 [
                     'responseStatus' => 0,
                     'message' => $e->getMessage(),
-                ], 500);
+                ],
+                500
+            );
         }
-    }// end -:- getMovieViewDataById()
+    } // end -:- getMovieViewDataById()
+
+    public function getSearchData($searchData)
+    {
+        header('Access-Control-Allow-Headers: *');
+        //$search = $request->search;
+        try {
+            $movies = Movie::leftJoin('countries', 'movies.country_id', '=', 'countries.id')
+                ->leftJoin('languages', 'movies.language_id', '=', 'languages.id')
+                ->where('movies.is_active', 1)
+                ->where('movies.title', 'LIKE', "%$searchData%")
+                ->orderBy('movies.updated_at', 'desc')
+                ->get([
+                    'movies.*',
+                    'countries.nice_name_en as country_title',
+                    'languages.language_name'
+                ]);
+            return response()->json(
+                [
+                    'responseStatus' => 1,
+                    'responseCode' => 200,
+                    'message' => 'Get all search movies successfully.',
+                    'movies' => $movies
+                ],
+                200
+            );
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'responseStatus' => 0,
+                    'message' => $e->getMessage(),
+                ],
+                500
+            );
+        }
+    } // end -:- getSearchData()
 }// end -:- MovieController
